@@ -69,10 +69,7 @@ video::getDisplays(const Napi::CallbackInfo &info)
 
 		float ddpi, hdpi, vdpi;
 		if (SDL_GetDisplayDPI(i, &ddpi, &hdpi, &vdpi) < 0) {
-			std::ostringstream message;
-			message << "SDL_GetDisplayDPI(" << i << ") error: " << SDL_GetError();
-			SDL_ClearError();
-			throw Napi::Error::New(env, message.str());
+			ddpi = hdpi = vdpi = 180.0f;
 		}
 
 		Napi::Object dpi = Napi::Object::New(env);
