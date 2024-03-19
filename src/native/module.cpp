@@ -44,6 +44,7 @@ init (Napi::Env env, Napi::Object exports)
 	exports.Set("window_render", Napi::Function::New<window::render>(env));
 	exports.Set("window_setIcon", Napi::Function::New<window::setIcon>(env));
 	exports.Set("window_flash", Napi::Function::New<window::flash>(env));
+	exports.Set("window_glSwapWindow", Napi::Function::New<window::glSwapWindow>(env));
 	exports.Set("window_destroy", Napi::Function::New<window::destroy>(env));
 
 	exports.Set("keyboard_getKey", Napi::Function::New<keyboard::getKey>(env));

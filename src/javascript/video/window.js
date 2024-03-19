@@ -383,6 +383,12 @@ class Window extends EventsViaPoll {
 		Bindings.window_flash(this._id, untilFocused ? 2 : 1)
 	}
 
+	glSwapWindow () {
+		if (this._destroyed) { throw Object.assign(new Error("window is destroyed"), { id: this._id }) }
+
+		Bindings.window_glSwapWindow(this._id)
+	}
+
 	stopFlashing () {
 		if (this._destroyed) { throw Object.assign(new Error("window is destroyed"), { id: this._id }) }
 

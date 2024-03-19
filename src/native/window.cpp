@@ -4,31 +4,6 @@
 #include <string>
 #include <sstream>
 
-
-#if defined(__LINUX__)
-	#define GL_NativeWindow Window
-	struct GPU_NativeData {
-		Display *display;
-		Window window;
-	};
-	#define GPU_WINDOW_FLAG SDL_WINDOW_VULKAN
-#elif defined(__WIN32__)
-	#define GL_NativeWindow HWND
-	struct GPU_NativeData {
-		HWND hwnd;
-		HINSTANCE hinstance;
-	};
-	#define GPU_WINDOW_FLAG 0
-#elif defined(__MACOSX__)
-	#include "cocoa-window.h"
-	#define GL_NativeWindow CALayer *
-	struct GPU_NativeData {
-		CALayer *layer;
-	};
-	#define GPU_WINDOW_FLAG SDL_WINDOW_METAL
-#endif
-
-
 void
 updateRenderer(
 	Napi::Env &env,
@@ -112,7 +87,6 @@ window::create (const Napi::CallbackInfo &info)
 		| (is_borderless ? SDL_WINDOW_BORDERLESS : 0)
 		| (is_always_on_top ? SDL_WINDOW_ALWAYS_ON_TOP : 0)
 		| (is_opengl ? SDL_WINDOW_OPENGL : 0)
-		| (is_webgpu ? GPU_WINDOW_FLAG : 0)
 		| (should_skip_taskbar ? SDL_WINDOW_SKIP_TASKBAR : 0)
 		| (is_popup_menu ? SDL_WINDOW_POPUP_MENU : 0)
 		| (is_tooltip ? SDL_WINDOW_TOOLTIP : 0)
@@ -662,6 +636,26 @@ window::flash (const Napi::CallbackInfo &info)
 		SDL_ClearError();
 		throw Napi::Error::New(env, message.str());
 	}
+
+	return env.Undefined();
+}
+
+Napi::Value
+window::glSwapWindow (const Napi::CallbackInfo &info)
+{
+	Napi::Env env = info.Env();
+
+	int window_id = info[0].As<Napi::Number>().Int32Value();
+
+	SDL_Window *window = SDL_GetWindowFromID(window_id);
+	if (window == nullptr) {
+                std::ostringstream message;
+                message << "SDL_GetWindowFromID(" << window_id << ") error: " << SDL_GetError();
+                SDL_ClearError();
+                throw Napi::Error::New(env, message.str());
+        }
+
+	SDL_GL_SwapWindow(window);
 
 	return env.Undefined();
 }

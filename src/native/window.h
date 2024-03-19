@@ -23,6 +23,7 @@ namespace window {
 		Napi::Value render(const Napi::CallbackInfo &info);
 		Napi::Value setIcon(const Napi::CallbackInfo &info);
 		Napi::Value flash(const Napi::CallbackInfo &info);
+		Napi::Value glSwapWindow(const Napi::CallbackInfo &info);
 		Napi::Value destroy(const Napi::CallbackInfo &info);
 
 }; // namespace window
