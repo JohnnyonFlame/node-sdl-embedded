@@ -136,36 +136,6 @@ window::create (const Napi::CallbackInfo &info)
 			SDL_ClearError();
 			throw Napi::Error::New(env, message.str());
 		}
-
-		if (is_opengl) {
-			int native_size = sizeof(GL_NativeWindow);
-			Napi::Buffer<char> native_buffer = Napi::Buffer<char>::New(env, native_size);
-			GL_NativeWindow *native_window = (GL_NativeWindow *) native_buffer.Data();
-			native = native_buffer;
-
-			#if defined(__LINUX__)
-				*native_window = info.info.x11.window;
-			#elif defined(__WIN32__)
-				*native_window = info.info.win.window;
-			#elif defined(__MACOSX__)
-				*native_window = getCocoaGlView(info.info.cocoa.window);
-			#endif
-		} else if (is_webgpu) {
-			int native_size = sizeof(GPU_NativeData);
-			Napi::Buffer<char> native_buffer = Napi::Buffer<char>::New(env, native_size);
-			GPU_NativeData *native_data = (GPU_NativeData *) native_buffer.Data();
-			native = native_buffer;
-
-			#if defined(__LINUX__)
-				native_data->display = info.info.x11.display;
-				native_data->window = info.info.x11.window;
-			#elif defined(__WIN32__)
-				native_data->hwnd = info.info.win.window;
-				native_data->hinstance = info.info.win.hinstance;
-			#elif defined(__MACOSX__)
-				native_data->layer = getCocoaGpuView(info.info.cocoa.window);
-			#endif
-		}
 	}
 	else {
 		updateRenderer(env, window, &is_accelerated, &is_vsync);
