@@ -33,6 +33,7 @@ execSync(`npx -y node-gyp rebuild ${archFlag} -j max --verbose`, {
 console.log("install to", C.dir.dist)
 await Fs.promises.rm(C.dir.dist, { recursive: true }).catch(() => {})
 await Fs.promises.mkdir(C.dir.dist, { recursive: true })
+await Fs.promises.mkdir(SDL_LIB, { recursive: true })
 await Promise.all([
 	Fs.promises.copyFile(
 		Path.join(C.dir.build, 'Release/sdl.node'),
